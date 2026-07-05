@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Le Tchad est-il un État laïque ?",
+    "articles_attendus": [1],
+    "mots_cles": ["laïque"]
+  },
+  {
+    "question": "Quelles sont les langues officielles du Tchad ?",
+    "articles_attendus": [10],
+    "mots_cles": ["français", "arabe"]
+  },
+  {
+    "question": "Quelles sont les couleurs du drapeau national ?",
+    "articles_attendus": [8],
+    "mots_cles": ["bleu", "or", "rouge"]
+  },
+  {
+    "question": "Qui exerce le pouvoir exécutif au Tchad ?",
+    "articles_attendus": [65],
+    "mots_cles": ["Président", "Gouvernement"]
+  },
+  {
+    "question": "Qui est le Chef de l'État ?",
+    "articles_attendus": [66],
+    "mots_cles": ["Président"]
+  },
+  {
+    "question": "De quoi est composé le Parlement tchadien ?",
+    "articles_attendus": [110],
+    "mots_cles": ["Assemblée nationale", "Sénat"]
+  },
+  {
+    "question": "Au nom de qui la justice est-elle rendue ?",
+    "articles_attendus": [158],
+    "mots_cles": ["Peuple"]
+  },
+  {
+    "question": "À qui appartient l'initiative de la révision de la Constitution ?",
+    "articles_attendus": [279],
+    "mots_cles": ["Président", "Parlement"]
+  },
+  {
+    "question": "Combien de jours avant l'élection les candidatures à la présidence doivent-elles être déposées ?",
+    "articles_attendus": [69],
+    "mots_cles": ["cinquante"]
+  },
+  {
+    "question": "Quel est le taux de TVA au Tchad ?",
+    "articles_attendus": [],
+    "refus_attendu": true
+  }
+]

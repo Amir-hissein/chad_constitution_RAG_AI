@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser       
 # pyrefly: ignore [missing-import]
 from langgraph.graph import StateGraph, START, END
-from rag_chain import retriever, prompt, llm, formater_contexte
+from rag_chain import retriever, prompt, llm, formater_contexte, verifier_ollama
 
 # 1. L'ÉTAT : le dictionnaire qui circule dans le graphe
 class EtatRAG(TypedDict):
@@ -35,6 +35,12 @@ g.add_edge("generate", END)
 app = g.compile()
 
 if __name__ == "__main__":
+    import sys
+    ok, msg = verifier_ollama()
+    print(msg)
+    if not ok:
+        sys.exit(1)
+
     question = "Combien de temps dure le mandat d'un sénateur ?"
     resultat = app.invoke({"question": question})
     print("QUESTION :", question, "\n")

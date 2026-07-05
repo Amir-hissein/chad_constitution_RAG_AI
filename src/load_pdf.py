@@ -19,7 +19,6 @@ def nettoyer(texte):
 
 if __name__ == "__main__":
     texte = nettoyer(charger_pdf("data/constitution_tchad.pdf"))
-    texte = nettoyer(charger_pdf("data/constitution_tchad.pdf"))
 
     print("=== TEST DE L'ÉTAPE 1 ===\n")
 
