@@ -36,9 +36,13 @@ PHASE A — INDEXING (run once, offline)
   4. Index     build_index.py       vectors → ChromaDB (persisted on disk)
 
 PHASE B — QUERYING (run on every question)
-  5. Retrieve  rag_chain.py         question → 4 closest articles (semantic search)
+  5. Retrieve  rag_chain.py         question → 6 closest articles (semantic search)
   6. Generate  rag_chain.py         articles + question → grounded answer (Llama 3.1)
   7. Orchestrate  graph.py          retrieve → generate as a LangGraph state machine
+
+INTERFACE & EVALUATION
+  8. Web UI    app.py               ask questions in the browser (Streamlit)
+  9. Evaluate  evaluate.py          score retrieval & answers on eval/questions.json
 ```
 
 **Key idea — embeddings.** An embedding turns a text into a list of ~1024 numbers (a
@@ -60,7 +64,11 @@ chad_constitution_RAG/
 │   ├── split_documents.py         # Step 2 — chunk by article + metadata
 │   ├── build_index.py             # Steps 3-4 — embeddings + ChromaDB index
 │   ├── rag_chain.py               # Steps 5-6 — retrieval + generation
-│   └── graph.py                   # Step 7 — LangGraph orchestration (optional)
+│   ├── graph.py                   # Step 7 — LangGraph orchestration (optional)
+│   ├── app.py                     # Step 8 — Streamlit web interface
+│   └── evaluate.py                # Step 9 — automatic evaluation
+├── eval/
+│   └── questions.json             # Q&A test set used by evaluate.py
 ├── chroma_db/                     # persisted vector store (auto-generated)
 ├── requirements.txt
 ├── .vscode/settings.json          # points the editor to the venv
@@ -94,9 +102,19 @@ ollama pull llama3.1
 # Build the vector index (run once — downloads BGE-M3 on first run, a few minutes)
 python src/build_index.py
 
-# Ask a question
+# Option A — Web interface (recommended): opens http://localhost:8501 in your browser
+streamlit run src/app.py
+
+# Option B — Command line
 python src/rag_chain.py
+
+# Optional — measure quality (retrieval & answers) on a fixed question set
+PYTHONPATH=src python src/evaluate.py
 ```
+
+The **web interface** (`app.py`) shows the generated answer plus an expandable panel listing
+the exact articles that were retrieved, so you can check where each answer comes from. The
+heavy model/index load is cached, so only the first question is slow.
 
 Each step file is runnable on its own and prints a ✅ / ❌ self-test, so you can validate the
 pipeline stage by stage.
@@ -126,10 +144,10 @@ replies: *"Cette information ne figure pas dans la Constitution."*
 
 ### Known Limitations
 
-- `detecter_titre()` currently maps titles only up to article 172; articles 173–285 fall
-  back to `"Autre"` and should be completed.
 - The document preamble (text before Article 1) is intentionally dropped by the article
   splitter.
+- On the built-in evaluation set, retrieval is ~80%: a few "opening" articles of a title
+  (e.g. 65, 110) are occasionally missed. Raising `k` in `rag_chain.py` helps.
 
 ---
 
@@ -157,9 +175,13 @@ AŞAMA A — İNDEKSLEME (bir kez, çevrimdışı)
   4. İndeksle  build_index.py       vektörler → ChromaDB (diske kaydedilir)
 
 AŞAMA B — SORGULAMA (her soruda)
-  5. Getirme   rag_chain.py         soru → en yakın 4 madde (anlamsal arama)
+  5. Getirme   rag_chain.py         soru → en yakın 6 madde (anlamsal arama)
   6. Üretme    rag_chain.py         maddeler + soru → dayanaklı cevap (Llama 3.1)
   7. Düzenleme graph.py             getirme → üretme, LangGraph durum makinesi olarak
+
+ARAYÜZ VE DEĞERLENDİRME
+  8. Web Arayüzü app.py             tarayıcıda soru sor (Streamlit)
+  9. Değerlendir evaluate.py        eval/questions.json üzerinde getirme ve cevap skoru
 ```
 
 **Ana fikir — gömmeler (embeddings).** Bir gömme, metni ~1024 sayıdan oluşan bir listeye
@@ -181,7 +203,11 @@ chad_constitution_RAG/
 │   ├── split_documents.py         # Adım 2 — maddeye göre parçalama + üstveri
 │   ├── build_index.py             # Adım 3-4 — gömmeler + ChromaDB indeksi
 │   ├── rag_chain.py               # Adım 5-6 — getirme + üretme
-│   └── graph.py                   # Adım 7 — LangGraph düzenlemesi (isteğe bağlı)
+│   ├── graph.py                   # Adım 7 — LangGraph düzenlemesi (isteğe bağlı)
+│   ├── app.py                     # Adım 8 — Streamlit web arayüzü
+│   └── evaluate.py                # Adım 9 — otomatik değerlendirme
+├── eval/
+│   └── questions.json             # evaluate.py için soru-cevap test seti
 ├── chroma_db/                     # kalıcı vektör deposu (otomatik oluşturulur)
 ├── requirements.txt
 ├── .vscode/settings.json          # editörü venv'e yönlendirir
@@ -215,9 +241,19 @@ ollama pull llama3.1
 # Vektör indeksini oluştur (bir kez — ilk çalıştırmada BGE-M3 indirilir, birkaç dakika)
 python src/build_index.py
 
-# Bir soru sor
+# Seçenek A — Web arayüzü (önerilir): tarayıcıda http://localhost:8501 açılır
+streamlit run src/app.py
+
+# Seçenek B — Komut satırı
 python src/rag_chain.py
+
+# İsteğe bağlı — sabit bir soru setinde kaliteyi ölç (getirme ve cevaplar)
+PYTHONPATH=src python src/evaluate.py
 ```
+
+**Web arayüzü** (`app.py`), üretilen cevabın yanı sıra getirilen maddeleri listeleyen
+açılabilir bir panel gösterir; böylece her cevabın nereden geldiğini kontrol edebilirsiniz.
+Ağır model/indeks yüklemesi önbelleğe alınır, bu yüzden yalnızca ilk soru yavaştır.
 
 Her adım dosyası tek başına çalıştırılabilir ve ✅ / ❌ öz-test yazdırır; böylece işlem
 hattını adım adım doğrulayabilirsiniz.
@@ -248,10 +284,10 @@ Bir soru kapsam dışıysa (ör. *"Fransa'nın başkenti neresidir?"*), asistan 
 
 ### Bilinen Kısıtlamalar
 
-- `detecter_titre()` şu anda başlıkları yalnızca 172. maddeye kadar eşler; 173–285. maddeler
-  `"Autre"` (Diğer) olarak kalır ve tamamlanmalıdır.
 - Belge önsözü (Madde 1'den önceki metin), madde ayırıcı tarafından bilinçli olarak
   atılır.
+- Yerleşik değerlendirme setinde getirme kalitesi ~%80'dir: bir başlığın "açılış" maddeleri
+  (ör. 65, 110) bazen kaçırılır. `rag_chain.py` içindeki `k` değerini artırmak yardımcı olur.
 
 ---
 
