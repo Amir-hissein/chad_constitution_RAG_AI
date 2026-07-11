@@ -4,7 +4,6 @@
 > **Constitution of Chad (2023, revised 2025)** using only the official text — with
 > article-level citations and no hallucinations.
 
-**Languages / Diller:** [English](#-english) · [Türkçe](#-türkçe)
 
 **Stack:** Python · LangChain · ChromaDB · BGE-M3 (embeddings) · Ollama (Llama 3.1) · LangGraph
 
