@@ -288,9 +288,3 @@ Bir soru kapsam dışıysa (ör. *"Fransa'nın başkenti neresidir?"*), asistan 
   atılır.
 - Yerleşik değerlendirme setinde getirme kalitesi ~%80'dir: bir başlığın "açılış" maddeleri
   (ör. 65, 110) bazen kaçırılır. `rag_chain.py` içindeki `k` değerini artırmak yardımcı olur.
-
----
-
-*Built as a hands-on project to learn Retrieval-Augmented Generation from scratch.*
-*Sıfırdan Retrieval-Augmented Generation öğrenmek için uygulamalı bir proje olarak
-geliştirilmiştir.*
